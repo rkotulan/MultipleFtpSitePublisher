@@ -79,6 +79,7 @@
     <Compile Include="Configs\ContainerConfig.cs" />
     <Compile Include="Configs\Site.cs" />
     <Compile Include="Configs\TransferableItem.cs" />
+    <Compile Include="Extensions\FileNameExtension.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Application.cs" />

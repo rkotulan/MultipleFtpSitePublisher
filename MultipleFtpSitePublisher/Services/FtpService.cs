@@ -8,6 +8,7 @@ namespace MultipleFtpSitePublisher.Services
     using System;
 
     using MultipleFtpSitePublisher.Configs;
+    using MultipleFtpSitePublisher.Extensions;
 
     using Serilog;
 
@@ -46,14 +47,11 @@ namespace MultipleFtpSitePublisher.Services
                     transferOptions.TransferMode = TransferMode.Binary;
                     
                     session.FileTransferred += this.OnFileTransferred;
-                    var transferResult = session.PutFiles(
+                    session.PutFiles(
                         transferableItem.LocalPath,
                         site.RemoteBasePath + transferableItem.RemotePath,
                         transferableItem.Remove,
                         transferOptions);
-
-                    // Throw on any error
-                    transferResult.Check();
                 }
             }
             catch (Exception ex)
@@ -66,11 +64,11 @@ namespace MultipleFtpSitePublisher.Services
         {
             if (e.Error == null)
             {
-                this.logger.Information($"Upload of {e.Destination} succeeded");
+                this.logger.Information($"Upload of {e.Destination.ToShortFileName()} succeeded");
             }
             else
             {
-                this.logger.Error(e.Error, $"Chyba při uloadu  {e.Destination} souboru.");
+                this.logger.Error(e.Error, $"Error upload file {e.Destination.ToShortFileName()}");
             }
         }
     }

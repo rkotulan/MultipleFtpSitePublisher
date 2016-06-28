@@ -5,16 +5,23 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace MultipleFtpSitePublisher.Services
 {
+    using MultipleFtpSitePublisher.Configs;
+
+    using Serilog;
+
     public class Application : IApplication
     {
         private readonly IConfigService configService;
 
         private readonly IFtpService ftpService;
 
-        public Application(IConfigService configService, IFtpService ftpService)
+        private readonly ILogger logger;
+
+        public Application(IConfigService configService, IFtpService ftpService, ILogger logger)
         {
             this.configService = configService;
             this.ftpService = ftpService;
+            this.logger = logger;
         }
 
         public void Run()
@@ -23,11 +30,14 @@ namespace MultipleFtpSitePublisher.Services
 
             foreach (var site in config.Sites)
             {
+                this.logger.Information($"Site: {site.HostName}({site.RemoteBasePath})");
                 foreach (var transferableItem in config.TransferableItems)
                 {
                     this.ftpService.PutFiles(site, transferableItem);
                 }
             }
+
+            this.logger.Information("Upload finished");
         }
     }
 }

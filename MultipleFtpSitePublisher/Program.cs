@@ -33,7 +33,7 @@ namespace MultipleFtpSitePublisher
                 app.Run();
             }
 
-            Console.ReadLine();
+            Log.CloseAndFlush();
         }
     }
 }
