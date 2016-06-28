@@ -15,8 +15,8 @@ namespace MultipleFtpSitePublisher.Configs
             this.TransferableItems = new List<TransferableItem>();
         }
 
-        public IList<Site> Sites { get; set; }
+        public IList<Site> Sites { get; }
 
-        public IList<TransferableItem> TransferableItems { get; set; }
+        public IList<TransferableItem> TransferableItems { get; }
     }
 }

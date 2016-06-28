@@ -9,10 +9,19 @@ namespace MultipleFtpSitePublisher.Services
 
     using MultipleFtpSitePublisher.Configs;
 
+    using Serilog;
+
     using WinSCP;
 
     public class FtpService : IFtpService
     {
+        private readonly ILogger logger;
+
+        public FtpService(ILogger logger)
+        {
+            this.logger = logger;
+        }
+
         public void PutFiles(Site site, TransferableItem transferableItem)
         {
             // Setup session options
@@ -35,7 +44,8 @@ namespace MultipleFtpSitePublisher.Services
                     TransferOptions transferOptions = new TransferOptions();
                     transferOptions.ResumeSupport.State = TransferResumeSupportState.Smart;
                     transferOptions.TransferMode = TransferMode.Binary;
-
+                    
+                    session.FileTransferred += this.OnFileTransferred;
                     var transferResult = session.PutFiles(
                         transferableItem.LocalPath,
                         site.RemoteBasePath + transferableItem.RemotePath,
@@ -44,18 +54,23 @@ namespace MultipleFtpSitePublisher.Services
 
                     // Throw on any error
                     transferResult.Check();
-
-                    // Print results
-                    foreach (TransferEventArgs transfer in transferResult.Transfers)
-                    {
-                        // TODO : log
-                        Console.WriteLine($"Upload of {transfer.FileName} succeeded");
-                    }
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                this.logger.Error(ex, "Chyba");
+            }
+        }
+
+        private void OnFileTransferred(object sender, TransferEventArgs e)
+        {
+            if (e.Error == null)
+            {
+                this.logger.Information($"Upload of {e.Destination} succeeded");
+            }
+            else
+            {
+                this.logger.Error(e.Error, $"Chyba při uloadu  {e.Destination} souboru.");
             }
         }
     }
