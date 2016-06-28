@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="FtpService.cs" company="K - system. CZ s.r.o.">
-//   Copyright © K - system. CZ s.r.o. All Rights Reserved
+// <copyright file="FtpService.cs" company="Rudolf Kotulán">
+//   Copyright © Rudolf Kotulán All Rights Reserved
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 namespace MultipleFtpSitePublisher.Services
