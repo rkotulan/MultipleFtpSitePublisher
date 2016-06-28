@@ -5,7 +5,7 @@ Small app that can help you automate deployment to multiple ftp servers by JSON 
 
 Config file has to be named config.json and placed besides exe file.
 Example
-
+```json
 {
   "Sites": [
     {
@@ -34,3 +34,4 @@ Example
     }
   ]
 }
+```
