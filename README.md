@@ -4,7 +4,8 @@ Multiple ftp site publisher
 Small app that can help you automate deployment to multiple ftp servers by JSON config file.
 
 Config file has to be named config.json and placed besides exe file.
-Example
+
+###Example
 ```json
 {
   "Sites": [
