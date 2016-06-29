@@ -9,6 +9,6 @@ namespace MultipleFtpSitePublisher.Services
 
     public interface IConfigService
     {
-        Config GetConfig(string fileName = "config.json");
+        Config GetConfig(string fileName);
     }
 }

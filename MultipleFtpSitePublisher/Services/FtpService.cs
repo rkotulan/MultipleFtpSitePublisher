@@ -56,7 +56,7 @@ namespace MultipleFtpSitePublisher.Services
             }
             catch (Exception ex)
             {
-                this.logger.Error(ex, "Chyba");
+                this.logger.Error(ex, "Error");
             }
         }
 

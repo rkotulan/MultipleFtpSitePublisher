@@ -5,9 +5,6 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace MultipleFtpSitePublisher.Configs
 {
-    using System;
-    using System.Linq;
-
     using Autofac;
 
     using MultipleFtpSitePublisher.Services;
@@ -24,9 +21,7 @@ namespace MultipleFtpSitePublisher.Configs
             builder.RegisterType<ConfigService>().As<IConfigService>();
             builder.RegisterType<FtpService>().As<IFtpService>();
 
-            builder.Register((c, p) => Log.Logger)
-            .As<ILogger>()
-            .ExternallyOwned();
+            builder.Register((c, p) => Log.Logger).As<ILogger>().ExternallyOwned();
 
             return builder.Build();
         }

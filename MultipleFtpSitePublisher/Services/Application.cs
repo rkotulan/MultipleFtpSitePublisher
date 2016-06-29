@@ -1,11 +1,12 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Application.cs" company="Rudolf Kotulán">
-//   Copyright © Rudolf Kotulán All Rights Reserved
+// <copyright file="Application.cs" company="K - system. CZ s.r.o.">
+//   Copyright © K - system. CZ s.r.o. All Rights Reserved
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 namespace MultipleFtpSitePublisher.Services
 {
-    using MultipleFtpSitePublisher.Configs;
+    using System;
+    using System.Linq;
 
     using Serilog;
 
@@ -26,7 +27,12 @@ namespace MultipleFtpSitePublisher.Services
 
         public void Run()
         {
-            var config = this.configService.GetConfig();
+            var cmdArgs = Environment.GetCommandLineArgs();
+            var config = this.configService.GetConfig(this.GetConfigFileName(cmdArgs));
+            if (config == null)
+            {
+                return;                
+            }
 
             foreach (var site in config.Sites)
             {
@@ -38,6 +44,23 @@ namespace MultipleFtpSitePublisher.Services
             }
 
             this.logger.Information("Upload finished");
+        }
+
+        internal string GetConfigFileName(string[] commandLineArgs)
+        {
+            foreach (var commandLineArg in commandLineArgs.Select(x => x.Trim()))
+            {
+                if (commandLineArg.StartsWith("/configFile") || commandLineArg.StartsWith("/cf"))
+                {
+                    var parts = commandLineArg.Split('|');
+                    if (parts.Length == 2)
+                    {
+                        return parts[1].Trim();
+                    }
+                }
+            }
+
+            return "config.json";
         }
     }
 }

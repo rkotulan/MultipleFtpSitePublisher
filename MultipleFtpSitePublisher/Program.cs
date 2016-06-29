@@ -1,9 +1,8 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Program.cs" company="Rudolf Kotulán">
-//   Copyright © Rudolf Kotulán All Rights Reserved
+// <copyright file="Program.cs" company="K - system. CZ s.r.o.">
+//   Copyright © K - system. CZ s.r.o. All Rights Reserved
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
-
 namespace MultipleFtpSitePublisher
 {
     using System;
@@ -20,12 +19,11 @@ namespace MultipleFtpSitePublisher
     {
         public static void Main(string[] args)
         {
-            Log.Logger = new LoggerConfiguration()
-                .WriteTo
-                .ColoredConsole()
-                .WriteTo
-                .RollingFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"log-{Date}.txt"))
-                .CreateLogger();
+            Log.Logger =
+                new LoggerConfiguration()
+                    .WriteTo.ColoredConsole()
+                    .WriteTo.RollingFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"log-{Date}.txt"))
+                    .CreateLogger();
 
             var container = ContainerConfig.Configure();
             using (var scope = container.BeginLifetimeScope())
@@ -35,6 +33,8 @@ namespace MultipleFtpSitePublisher
             }
 
             Log.CloseAndFlush();
+
+            Console.ReadLine();
         }
     }
 }

@@ -11,10 +11,25 @@ namespace MultipleFtpSitePublisher.Services
 
     using Newtonsoft.Json;
 
+    using Serilog;
+
     public class ConfigService : IConfigService
     {
-        public Config GetConfig(string fileName = "config.json")
+        private readonly ILogger logger;
+
+        public ConfigService(ILogger logger)
         {
+            this.logger = logger;
+        }
+
+        public Config GetConfig(string fileName)
+        {
+            if (!File.Exists(fileName))
+            {
+                this.logger.Information("Config file not found.");
+                return null;
+            }
+
             var configContent = File.ReadAllText(fileName);
             return JsonConvert.DeserializeObject<Config>(configContent);
         }
