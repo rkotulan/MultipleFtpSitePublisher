@@ -6,11 +6,10 @@
 namespace MultipleFtpSitePublisher
 {
     using System;
-    using System.IO;
 
     using Autofac;
 
-    using MultipleFtpSitePublisher.Configs;
+    using MultipleFtpSitePublisher.Infrastructure;
     using MultipleFtpSitePublisher.Services;
 
     using Serilog;
@@ -19,13 +18,10 @@ namespace MultipleFtpSitePublisher
     {
         public static void Main(string[] args)
         {
-            Log.Logger =
-                new LoggerConfiguration()
-                    .WriteTo.ColoredConsole()
-                    .WriteTo.RollingFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"log-{Date}.txt"))
-                    .CreateLogger();
+            LoggerConfig.Configure();
+            var appConfig = CommandLineParser.Configure(args);
 
-            var container = ContainerConfig.Configure();
+            var container = ContainerConfig.Configure(appConfig);
             using (var scope = container.BeginLifetimeScope())
             {
                 var app = scope.Resolve<IApplication>();
@@ -34,7 +30,10 @@ namespace MultipleFtpSitePublisher
 
             Log.CloseAndFlush();
 
-            Console.ReadLine();
+            if (appConfig.WaitForEnter)
+            {
+                Console.ReadLine();
+            }
         }
     }
 }

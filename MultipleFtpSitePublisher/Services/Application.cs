@@ -5,33 +5,42 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace MultipleFtpSitePublisher.Services
 {
-    using System;
-    using System.Linq;
+    using MultipleFtpSitePublisher.Configs;
 
     using Serilog;
 
     public class Application : IApplication
     {
+        private readonly AppConfig appConfig;
+
         private readonly IConfigService configService;
 
         private readonly IFtpService ftpService;
 
         private readonly ILogger logger;
 
-        public Application(IConfigService configService, IFtpService ftpService, ILogger logger)
+        private readonly IWildCardService wildCardService;
+
+        public Application(
+            IConfigService configService, 
+            IFtpService ftpService, 
+            ILogger logger, 
+            IWildCardService wildCardService, 
+            AppConfig appConfig)
         {
             this.configService = configService;
             this.ftpService = ftpService;
             this.logger = logger;
+            this.wildCardService = wildCardService;
+            this.appConfig = appConfig;
         }
 
         public void Run()
         {
-            var cmdArgs = Environment.GetCommandLineArgs();
-            var config = this.configService.GetConfig(this.GetConfigFileName(cmdArgs));
+            var config = this.configService.GetConfig(this.GetConfigFileName());
             if (config == null)
             {
-                return;                
+                return;
             }
 
             foreach (var site in config.Sites)
@@ -39,6 +48,7 @@ namespace MultipleFtpSitePublisher.Services
                 this.logger.Information($"Site: {site.HostName}({site.RemoteBasePath})");
                 foreach (var transferableItem in config.TransferableItems)
                 {
+                    this.wildCardService.ReplaceWildcards(transferableItem);
                     this.ftpService.PutFiles(site, transferableItem);
                 }
             }
@@ -46,21 +56,14 @@ namespace MultipleFtpSitePublisher.Services
             this.logger.Information("Upload finished");
         }
 
-        internal string GetConfigFileName(string[] commandLineArgs)
+        internal string GetConfigFileName()
         {
-            foreach (var commandLineArg in commandLineArgs.Select(x => x.Trim()))
+            if (string.IsNullOrEmpty(this.appConfig.ConfigFileName))
             {
-                if (commandLineArg.StartsWith("/configFile") || commandLineArg.StartsWith("/cf"))
-                {
-                    var parts = commandLineArg.Split('|');
-                    if (parts.Length == 2)
-                    {
-                        return parts[1].Trim();
-                    }
-                }
+                return "config.json";
             }
 
-            return "config.json";
+            return this.appConfig.ConfigFileName;
         }
     }
 }
