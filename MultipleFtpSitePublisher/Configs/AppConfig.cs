@@ -9,6 +9,8 @@ namespace MultipleFtpSitePublisher.Configs
     {
         public string ConfigFileName { get; set; }
 
+        public string LogFileName { get; set; }
+
         public bool WaitForEnter { get; set; }
     }
 }

@@ -15,6 +15,7 @@ namespace MultipleFtpSitePublisher.Infrastructure
         {
             var parser = new FluentCommandLineParser<AppConfig>();
             parser.Setup(x => x.ConfigFileName).As('c', "configFile");
+            parser.Setup(x => x.LogFileName).As('l', "logFile");
             parser.Setup(x => x.WaitForEnter).As('w', "waitForEnter");
             parser.Parse(args);
             return parser.Object;

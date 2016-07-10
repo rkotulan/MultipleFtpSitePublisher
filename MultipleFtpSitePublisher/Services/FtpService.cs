@@ -47,6 +47,9 @@ namespace MultipleFtpSitePublisher.Services
                     transferOptions.TransferMode = TransferMode.Binary;
                     
                     session.FileTransferred += this.OnFileTransferred;
+
+                    
+
                     session.PutFiles(
                         transferableItem.LocalPath,
                         site.RemoteBasePath + transferableItem.RemotePath,
@@ -64,11 +67,11 @@ namespace MultipleFtpSitePublisher.Services
         {
             if (e.Error == null)
             {
-                this.logger.Information($"Upload of {e.Destination.ToShortFileName()} succeeded");
+                this.logger.Information($"Upload of {e.FileName.ToShortFileName()} succeeded");
             }
             else
             {
-                this.logger.Error(e.Error, $"Error upload file {e.Destination.ToShortFileName()}");
+                this.logger.Error(e.Error, $"Error upload file {e.FileName.ToShortFileName()}");
             }
         }
     }

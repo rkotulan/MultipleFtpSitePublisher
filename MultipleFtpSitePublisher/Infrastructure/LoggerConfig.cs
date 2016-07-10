@@ -8,15 +8,22 @@ namespace MultipleFtpSitePublisher.Infrastructure
     using System;
     using System.IO;
 
+    using MultipleFtpSitePublisher.Configs;
+
     using Serilog;
 
     public static class LoggerConfig
     {
-        public static void Configure()
+        public static void Configure(AppConfig appConfig)
         {
+            if (string.IsNullOrEmpty(appConfig.LogFileName))
+            {
+                appConfig.LogFileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"log-{Date}.txt");
+            }
+
             Log.Logger =
                 new LoggerConfiguration().WriteTo.ColoredConsole()
-                    .WriteTo.RollingFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"log-{Date}.txt"))
+                    .WriteTo.RollingFile(appConfig.LogFileName)
                     .CreateLogger();
         }
     }

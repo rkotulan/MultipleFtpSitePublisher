@@ -18,14 +18,14 @@ namespace MultipleFtpSitePublisher.Extensions
 
         public static string ToShortFileName(this string fileName)
         {
-            var parts = fileName.Split(new[] { '/' });
+            var parts = fileName.Split(new[] { '\\' });
 
             if (parts.Length <= 1)
             {
                 return fileName;
             }
 
-            return parts.TakeLast(2).Aggregate((current, next) => current + "/" + next);
+            return parts.TakeLast(2).Aggregate((current, next) => current + "\\" + next);
         }
     }
 }

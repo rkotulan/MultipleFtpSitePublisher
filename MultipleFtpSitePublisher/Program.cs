@@ -18,8 +18,8 @@ namespace MultipleFtpSitePublisher
     {
         public static void Main(string[] args)
         {
-            LoggerConfig.Configure();
             var appConfig = CommandLineParser.Configure(args);
+            LoggerConfig.Configure(appConfig);
 
             var container = ContainerConfig.Configure(appConfig);
             using (var scope = container.BeginLifetimeScope())
